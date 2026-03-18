@@ -10,13 +10,13 @@ the steps.
 If running on a new machine, you may need to set the execution policy from an
 elevated PowerShell:
 
-```
+```powershell
 Set-ExecutionLevel Unrestricted
 ```
 
 Then run the script:
 
-```
+```powershell
 .\Setup-GPG-Git.ps1 --GitUserName "Bob Yards" --GitUserEmail bob.yards@ultra-horizon.com
 ```
 
@@ -27,7 +27,7 @@ Don't forget to reset the execution level (if appropriate).
 ## Notes
 
 ### Install dependencies with WinGet
-```
+```powershell
 winget install -e --id Git.Git
 winget install -e --id GnuPG.Gpg4win
 ```
@@ -36,22 +36,22 @@ Check if SSH is installed, if not set up OpenSSH using [Windows optional feature
 ### Ensure default Windows OpenSSH auth agent is not running and disabled
 
 Requires elevated terminal
-```
+```powershell
 Stop-Service ssh-agent
 Set-Service ssh-agent -StartupType Disabled
 ```
 
 ### Fetch key from keyserver, and get keyid
 Plug in YubiKey then run
-```
+```powershell
 gpg --card-status
 ```
 Fetch from URL in card status output
-```
+```powershell
 gpg --fetch https://keys.uh-net.com/XXXXXX.asc
 ```
 Now run the following and take the ID of the **signing** key
-```
+```powershell
 gpg -K --keyid-format=long
 ```
 
@@ -70,24 +70,24 @@ enable-putty-support
 ```
 
 ### Restart the agent
-```
+```powershell
 gpg-connect-agent.exe killagent /bye
 gpg-connect-agent.exe /bye
 ```
 or
-```
+```powershell
 gpgconf.exe --kill gpg-agent
 gpgconf.exe --launch gpg-agent
 ```
 
 ### Set up git to use native OpenSSH and GPG install
-```
+```powershell
 git config --global core.sshCommand "C:/Windows/System32/OpenSSH/ssh.exe"
 git config --global gpg.program "C:/Program Files/GnuPG/bin/gpg.exe"
 ```
 
 ### Set up git user to use code signing
-```
+```powershell
 git config --global user.name "Bob Yards"
 git config --global user.email bob.yards@example.com
 git config --global commit.gpgsign true
