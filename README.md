@@ -11,16 +11,16 @@ If running on a new machine, you may need to set the execution policy from an
 elevated PowerShell:
 
 ```powershell
-Set-ExecutionLevel Unrestricted
+Set-ExecutionPolicy Unrestricted
 ```
 
 Then run the script:
 
 ```powershell
-.\Setup-GPG-Git.ps1 --GitUserName "Bob Yards" --GitUserEmail bob.yards@ultra-horizon.com
+.\Setup-GPG-Git.ps1 --GitUserName "Bob Yards" --GitUserEmail "bob.yards@ultra-horizon.com"
 ```
 
-Don't forget to reset the execution level (if appropriate).
+Don't forget to reset the execution policy (if appropriate).
 
 ---
 
