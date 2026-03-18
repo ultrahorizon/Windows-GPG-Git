@@ -5,16 +5,35 @@ used for code signing, SSH and more. This repo collates some notes on getting a
 GPG/Git environment setup in Windows, as well as a script that automates all
 the steps.
 
+## Script Usage
+
+If running on a new machine, you may need to set the execution policy from an
+elevated PowerShell:
+
+```
+Set-ExecutionLevel Unrestricted
+```
+
+Then run the script:
+
+```
+.\Setup-GPG-Git.ps1 --GitUserName "Bob Yards" --GitUserEmail bob.yards@ultra-horizon.com
+```
+
+Don't forget to reset the execution level (if appropriate).
+
 ---
 
-## Install dependencies with WinGet
+## Notes
+
+### Install dependencies with WinGet
 ```
 winget install -e --id Git.Git
 winget install -e --id GnuPG.Gpg4win
 ```
 Check if SSH is installed, if not set up OpenSSH using [Windows optional features](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse).
 
-## Ensure default Windows OpenSSH auth agent is not running and disabled
+### Ensure default Windows OpenSSH auth agent is not running and disabled
 
 Requires elevated terminal
 ```
@@ -22,7 +41,7 @@ Stop-Service ssh-agent
 Set-Service ssh-agent -StartupType Disabled
 ```
 
-## Fetch key from keyserver, and get keyid
+### Fetch key from keyserver, and get keyid
 Plug in YubiKey then run
 ```
 gpg --card-status
@@ -36,7 +55,7 @@ Now run the following and take the ID of the **signing** key
 gpg -K --keyid-format=long
 ```
 
-## Write Config files:
+### Write Config files:
 
 `edit ~/AppData/Roaming/gnupg/gpg.conf` to contain:
 ```
@@ -50,7 +69,7 @@ enable-ssh-support
 enable-putty-support
 ```
 
-## Restart the agent
+### Restart the agent
 ```
 gpg-connect-agent.exe killagent /bye
 gpg-connect-agent.exe /bye
@@ -61,13 +80,13 @@ gpgconf.exe --kill gpg-agent
 gpgconf.exe --launch gpg-agent
 ```
 
-## Set up git to use native OpenSSH and GPG install
+### Set up git to use native OpenSSH and GPG install
 ```
 git config --global core.sshCommand "C:/Windows/System32/OpenSSH/ssh.exe"
 git config --global gpg.program "C:/Program Files/GnuPG/bin/gpg.exe"
 ```
 
-## Set up git user to use code signing
+### Set up git user to use code signing
 ```
 git config --global user.name "Bob Yards"
 git config --global user.email bob.yards@example.com
@@ -76,7 +95,7 @@ git config --global tag.gpgsign true
 git config --global user.signingkey <KEYID FROM gpg -k --keyid-format=long>
 ```
 
-## Setup automatic launch of GPG agent on login
+### Setup automatic launch of GPG agent on login
 
 Left as an exercise to the reader as there are multiple ways to do this.
 Recommended method is to use a task scheduler task - reference implementation
